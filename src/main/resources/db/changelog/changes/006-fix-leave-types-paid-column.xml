@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="006-fix-leave-types-paid-column" author="salma">
+        <sql dbms="mysql">
+            ALTER TABLE leave_types
+                MODIFY COLUMN paid BIT(1) NOT NULL DEFAULT b'1'
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

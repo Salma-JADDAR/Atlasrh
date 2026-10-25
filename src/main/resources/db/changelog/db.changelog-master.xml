@@ -11,5 +11,6 @@
     <include file="db/changelog/changes/003-create-contracts.xml"/>
     <include file="db/changelog/changes/004-create-leave-types.xml"/>
     <include file="db/changelog/changes/005-create-leave-requests.xml"/>
+    <include file="db/changelog/changes/006-fix-leave-types-paid-column.xml"/>
 
 </databaseChangeLog>
