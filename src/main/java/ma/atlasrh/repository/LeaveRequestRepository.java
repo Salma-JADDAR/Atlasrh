@@ -1,3 +1,4 @@
+
 package ma.atlasrh.repository;
 
 import ma.atlasrh.entity.LeaveRequest;
@@ -21,5 +22,14 @@ public interface LeaveRequestRepository
             List<LeaveRequestStatus> statuses,
             LocalDate requestedEndDate,
             LocalDate requestedStartDate
+    );
+
+    List<LeaveRequest>
+    findByEmployee_IdAndLeaveType_IdAndStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+            Long employeeId,
+            Long leaveTypeId,
+            LeaveRequestStatus status,
+            LocalDate endDate,
+            LocalDate startDate
     );
 }
