@@ -1,4 +1,4 @@
-package AtlasRH;
+package ma.atlasrh;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
