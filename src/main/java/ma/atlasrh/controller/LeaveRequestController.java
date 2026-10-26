@@ -48,7 +48,9 @@ public class LeaveRequestController {
         LeaveRequest leaveRequest =
                 leaveRequestService.getLeaveRequestById(id);
 
-        return ResponseEntity.ok(leaveRequestMapper.toDto(leaveRequest));
+        return ResponseEntity.ok(
+                leaveRequestMapper.toDto(leaveRequest)
+        );
     }
 
     @GetMapping("/by-employee/{employeeId}")
@@ -64,11 +66,12 @@ public class LeaveRequestController {
         return ResponseEntity.ok(requests);
     }
 
-    @GetMapping("/pending")
-    public ResponseEntity<List<LeaveRequestDTO>> getPendingRequests() {
+    @GetMapping("/by-manager/{managerId}/pending")
+    public ResponseEntity<List<LeaveRequestDTO>> getPendingRequestsByManager(
+            @PathVariable Long managerId) {
 
         List<LeaveRequestDTO> requests =
-                leaveRequestService.getPendingRequests()
+                leaveRequestService.getPendingRequestsByManager(managerId)
                         .stream()
                         .map(leaveRequestMapper::toDto)
                         .toList();
@@ -78,10 +81,11 @@ public class LeaveRequestController {
 
     @PatchMapping("/{id}/approve")
     public ResponseEntity<LeaveRequestDTO> approveLeaveRequest(
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            @RequestParam Long managerId) {
 
         LeaveRequest approvedRequest =
-                leaveRequestService.approveLeaveRequest(id);
+                leaveRequestService.approveLeaveRequest(id, managerId);
 
         return ResponseEntity.ok(
                 leaveRequestMapper.toDto(approvedRequest)
@@ -91,10 +95,15 @@ public class LeaveRequestController {
     @PatchMapping("/{id}/reject")
     public ResponseEntity<LeaveRequestDTO> rejectLeaveRequest(
             @PathVariable Long id,
+            @RequestParam Long managerId,
             @RequestParam(required = false) String managerComment) {
 
         LeaveRequest rejectedRequest =
-                leaveRequestService.rejectLeaveRequest(id, managerComment);
+                leaveRequestService.rejectLeaveRequest(
+                        id,
+                        managerId,
+                        managerComment
+                );
 
         return ResponseEntity.ok(
                 leaveRequestMapper.toDto(rejectedRequest)
