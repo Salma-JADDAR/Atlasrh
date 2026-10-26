@@ -105,18 +105,24 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<LeaveRequest> getPendingRequests() {
-        return leaveRequestRepository.findByStatus(
+    public List<LeaveRequest> getPendingRequestsByManager(Long managerId) {
+        Employee manager = findManagerOrThrow(managerId);
+
+        return leaveRequestRepository.findByEmployee_Manager_IdAndStatus(
+                manager.getId(),
                 LeaveRequestStatus.PENDING
         );
     }
 
     @Override
     @Transactional
-    public LeaveRequest approveLeaveRequest(Long id) {
+    public LeaveRequest approveLeaveRequest(Long id, Long managerId) {
         validateId(id);
 
+        Employee manager = findManagerOrThrow(managerId);
         LeaveRequest leaveRequest = findLeaveRequestOrThrow(id);
+
+        validateManagerOwnsRequest(leaveRequest, manager);
         validatePendingStatus(leaveRequest);
 
         leaveRequest.setStatus(LeaveRequestStatus.APPROVED);
@@ -128,10 +134,15 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
     @Transactional
     public LeaveRequest rejectLeaveRequest(
             Long id,
+            Long managerId,
             String managerComment) {
+
         validateId(id);
 
+        Employee manager = findManagerOrThrow(managerId);
         LeaveRequest leaveRequest = findLeaveRequestOrThrow(id);
+
+        validateManagerOwnsRequest(leaveRequest, manager);
         validatePendingStatus(leaveRequest);
 
         leaveRequest.setStatus(LeaveRequestStatus.REJECTED);
@@ -182,6 +193,31 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
                 ));
     }
 
+    private Employee findManagerOrThrow(Long managerId) {
+        validateId(managerId);
+
+        return employeeRepository.findById(managerId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Manager introuvable avec l'identifiant : "
+                                + managerId
+                ));
+    }
+
+    private void validateManagerOwnsRequest(
+            LeaveRequest leaveRequest,
+            Employee manager) {
+
+        Employee employee = leaveRequest.getEmployee();
+
+        if (employee == null
+                || employee.getManager() == null
+                || !manager.getId().equals(employee.getManager().getId())) {
+            throw new BusinessRuleException(
+                    "Ce manager n'est pas responsable de cet employé."
+            );
+        }
+    }
+
     private Employee findEmployeeForRequest(LeaveRequest leaveRequest) {
         if (leaveRequest.getEmployee() == null
                 || leaveRequest.getEmployee().getId() == null) {
@@ -207,6 +243,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     private LeaveType findLeaveTypeForRequest(
             LeaveRequest leaveRequest) {
+
         if (leaveRequest.getLeaveType() == null
                 || leaveRequest.getLeaveType().getId() == null) {
             throw new BusinessRuleException(
@@ -270,6 +307,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
     private int calculateWorkingDays(
             LocalDate startDate,
             LocalDate endDate) {
+
         int workingDays = 0;
 
         for (LocalDate date = startDate;
