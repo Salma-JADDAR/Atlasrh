@@ -2,9 +2,15 @@
 package ma.atlasrh.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "leave_types")
+@Getter
+@Setter
+@NoArgsConstructor
 public class LeaveType {
 
     @Id
@@ -22,43 +28,4 @@ public class LeaveType {
 
     @Column(nullable = false)
     private Boolean paid = true;
-
-    public LeaveType() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getAnnualAllowance() {
-        return annualAllowance;
-    }
-
-    public void setAnnualAllowance(Integer annualAllowance) {
-        this.annualAllowance = annualAllowance;
-    }
-
-    public Boolean getPaid() {
-        return paid;
-    }
-
-    public void setPaid(Boolean paid) {
-        this.paid = paid;
-    }
 }
