@@ -12,11 +12,15 @@ public interface LeaveRequestService {
 
     List<LeaveRequest> getRequestsByEmployee(Long employeeId);
 
-    List<LeaveRequest> getPendingRequests();
+    List<LeaveRequest> getPendingRequestsByManager(Long managerId);
 
-    LeaveRequest approveLeaveRequest(Long id);
+    LeaveRequest approveLeaveRequest(Long id, Long managerId);
 
-    LeaveRequest rejectLeaveRequest(Long id, String managerComment);
+    LeaveRequest rejectLeaveRequest(
+            Long id,
+            Long managerId,
+            String managerComment
+    );
 
     LeaveRequest cancelLeaveRequest(Long id);
 }
