@@ -1,11 +1,19 @@
+
 package ma.atlasrh.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ma.atlasrh.enums.LeaveRequestStatus;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "leave_requests")
+@Getter
+@Setter
+@NoArgsConstructor
 public class LeaveRequest {
 
     @Id
@@ -38,75 +46,4 @@ public class LeaveRequest {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "leave_type_id", nullable = false)
     private LeaveType leaveType;
-
-    public LeaveRequest() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public Integer getWorkingDays() {
-        return workingDays;
-    }
-
-    public void setWorkingDays(Integer workingDays) {
-        this.workingDays = workingDays;
-    }
-
-    public LeaveRequestStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(LeaveRequestStatus status) {
-        this.status = status;
-    }
-
-    public String getManagerComment() {
-        return managerComment;
-    }
-
-    public void setManagerComment(String managerComment) {
-        this.managerComment = managerComment;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public LeaveType getLeaveType() {
-        return leaveType;
-    }
-
-    public void setLeaveType(LeaveType leaveType) {
-        this.leaveType = leaveType;
-    }
 }
