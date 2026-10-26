@@ -32,4 +32,8 @@ public interface LeaveRequestRepository
             LocalDate endDate,
             LocalDate startDate
     );
+    List<LeaveRequest> findByEmployee_Manager_IdAndStatus(
+            Long managerId,
+            LeaveRequestStatus status
+    );
 }
